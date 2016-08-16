@@ -11,7 +11,7 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
         $scope.params ={pageSize:5};
         $scope.programName = "Insurance Company";
         function createColumns(programStageDataElements) {
-            var cols = []
+            var cols = [];
             if (programStageDataElements){
                 programStageDataElements.forEach(function (programStageDataElement) {
                     var filter = {};
@@ -142,7 +142,7 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
         iRoadModal.getRelations(event).then(function(newEvent){
             $scope.event = newEvent;
             $scope.loading = false;
-        })
+        });
         $scope.program = program;
         $scope.getDataElementIndex = function(dataElement){
             var index = "";
@@ -150,9 +150,9 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
                 if(dataValue.dataElement == dataElement.id){
                     index = i;
                 }
-            })
+            });
             return index;
-        }
+        };
         $scope.save = function () {
             iRoadModal.setRelations(event).then(function(newEvent){
                 DHIS2EventFactory.update(newEvent).then(function(results){
@@ -165,19 +165,19 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
                     console.log(error);
                     toaster.pop('error', error.status, error.statusText);
                 })
-            })
+            });
             /*
-            $scope.loading = true;
-            iRoadModal.save("Offence Event",$scope.item).then(function(results){
-                console.log(results);
-                $scope.loading = false;
-                toaster.pop('success', result.response.status, result.message);
-                $uibModalInstance.close($scope.item);
-            },function(error){
-                $scope.loading = false;
-                console.log(error);
-                toaster.pop('error', error.status, error.statusText);
-            });*/
+             $scope.loading = true;
+             iRoadModal.save("Offence Event",$scope.item).then(function(results){
+             console.log(results);
+             $scope.loading = false;
+             toaster.pop('success', result.response.status, result.message);
+             $uibModalInstance.close($scope.item);
+             },function(error){
+             $scope.loading = false;
+             console.log(error);
+             toaster.pop('error', error.status, error.statusText);
+             });*/
         };
 
         $scope.cancel = function () {
