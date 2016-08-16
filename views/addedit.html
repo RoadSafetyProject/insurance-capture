@@ -1,5 +1,8 @@
 <div class="modal-header">
-    <h3 class="modal-title">I'm a modal!</h3>
+    <h3 class="modal-title" align="center">
+        <span  ng-if = " modalAction == 'edit'">{{'edit_insurance_company_title'| translate}}</span>
+        <span  ng-if = " modalAction == 'add'">{{'add_new_insurance_company_title'| translate}}</span>
+    </h3>
 </div>
 <div class="modal-body">
     <table ng-if="!loading" class="table">

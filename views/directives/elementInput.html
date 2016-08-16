@@ -63,12 +63,6 @@
                 <span ng-bind-html="event | extrapolateDataValue:relation.dataElement.name | highlight: $select.search"></span>
             </ui-select-choices>
         </ui-select>
-        <!--<input type="text" class="form-control" ng-model="ngModel.value.dataValues[relation.index].value"
-               uib-typeahead="address for address in relation.searchRelations($viewValue)"
-               typeahead-template-url="customTemplate.html"
-               ng-blur="relation.onBlur(ngModel.value.dataValues[relation.index].value)"
-               typeahead-loading="relation.loading" typeahead-no-results="noResults"
-        />-->
         <div class="input-group-btn">
             <button type="button" class="btn btn-default dropdown-toggle"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
