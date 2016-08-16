@@ -142,9 +142,8 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
         iRoadModal.getRelations(event).then(function(newEvent){
             $scope.event = newEvent;
             $scope.loading = false;
-        })
+        });
         $scope.program = program;
-        console.log(program.programStages[0].programStageDataElements);
         $scope.ok = function () {
             $uibModalInstance.close({});
         };
