@@ -1,3 +1,3 @@
 [submodule "assets/js/dhis2-rel-lib"]
-	path = assets/js/dhis2-rel-lib
-	url = git@github.com:MorleyMinde/dhis2-js-library.git
+        path = assets/js/dhis2-rel-lib
+        url = git@github.com:MorleyMinde/dhis2-js-library.git

@@ -95,6 +95,7 @@ var appDirectives = angular.module('appDirectives', [])
             else if ($scope.dataElement.name.startsWith(iRoadModal.refferencePrefix)) {
                 $scope.relation = {
                     loading:true,
+                    relationships:[],
                     data:[],
                     searchRelations:function(value){
                         this.feedback = {status:"LOADING"};
@@ -105,22 +106,25 @@ var appDirectives = angular.module('appDirectives', [])
                             self.data = results;
                         })
                     },
-                    setDataElementIndex:function(dataElementName,dataValues){
+                    setDataElement:function(dataElementName){
                         this.feedback = {status:"LOADING"};
                         var self = this;
                         iRoadModal.getRelationship(dataElementName).then(function(dataElement){
                             self.dataElement = dataElement;
-                            dataValues.forEach(function(dataValue,index){
-                                if(dataValue.dataElement == dataElement.id){
-                                    self.index = index;
-                                }
+                            iRoadModal.getProgramByName(dataElementName.replace(iRoadModal.refferencePrefix,"")).then(function(program){
+                                program.programStages[0].programStageDataElements.forEach(function(programStageDataElement){
+                                    if(programStageDataElement.dataElement.name.startsWith(iRoadModal.refferencePrefix)){
+                                        alert("Here");
+                                        self.relationships.push(programStageDataElement);
+                                    }
+                                })
+                                self.feedback = {};
                             })
-                            self.feedback = {};
                         })
                     }
                 }
                 //console.log();
-                //$scope.relation.setDataElementIndex($scope.dataElement.name,$scope.ngModel.value.dataValues)
+                $scope.relation.setDataElement($scope.dataElement.name)
             }
         }];
         return {
