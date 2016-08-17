@@ -152,15 +152,12 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
             $uibModalInstance.dismiss('cancel');
         };
     })
-    .controller('EditController', function (NgTableParams,iRoadModal,DHIS2EventFactory, $scope,$uibModalInstance,program,event,modalAction,toaster) {
-        $scope.modalAction = modalAction;
+    .controller('EditController', function (NgTableParams,iRoadModal, $scope,$uibModalInstance,program,event,toaster) {
+        iRoadModal.getRelations(event).then(function(newEvent){
+            $scope.event = newEvent;
+            $scope.loading = false;
+        });
         $scope.program = program;
-
-        /**
-         * getDataElementIndex
-         * @param dataElement
-         * @returns {string}
-         */
         $scope.getDataElementIndex = function(dataElement){
             var index = "";
             event.dataValues.forEach(function(dataValue,i){
@@ -171,44 +168,21 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
             return index;
         };
 
-
-        if(event.dataValues){
-            iRoadModal.getRelations(event).then(function(newEvent){
-                $scope.event = newEvent;
-                $scope.loading = false;
-            });
-        }else{
-            //event.dataValues = {};
-            $scope.event = event;
-        }
-
-
-        //todo update list on update
+        /**
+         * save
+         */
         $scope.save = function () {
             $scope.loading = true;
-            if(modalAction == "edit"){
-                delete $scope.event.href;
-                iRoadModal.setRelations($scope.event).then(function(DHIS2Event){
-                    DHIS2EventFactory.update(DHIS2Event).then(function(results){
-                        $scope.loading = false;
-                        toaster.pop('success', results.response.status, results.message);
-                        $uibModalInstance.close($scope.event);
-                    },function(error){
-                        $scope.loading = false;
-                        console.log(error);
-                        toaster.pop('error', error.status, error.statusText);
-                    })
-                });
-            }
-            else{
-                toaster.pop('info', "Add new " + program.displayName, "On  progress");
+            iRoadModal.save($scope.event,$scope.program).then(function(result){
                 $scope.loading = false;
-                $uibModalInstance.close($scope.event);
-            }
-
+                $uibModalInstance.close(result);
+            },function(error){
+                $scope.loading = false;
+                console.log(error);
+            });
         };
 
         $scope.cancel = function () {
             $uibModalInstance.dismiss('cancel');
         };
-    })
+    });
