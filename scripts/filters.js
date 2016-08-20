@@ -15,7 +15,7 @@ var appFilters = angular.module('appFilters', [])
             if(event){
                 if(event.dataValues){
                     dataElements.forEach(function (dataElement) {
-                        event.dataValues.forEach(function (dataValue) {
+                        event.dataValues.forEach(function (dataValue,index) {
                             if (dataValue.dataElement == dataElement.id && dataElementName == dataElement.displayName) {
                                 returnValue = event.event + dataValue.dataElement;
                             }
