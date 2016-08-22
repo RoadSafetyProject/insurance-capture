@@ -61,10 +61,17 @@ var appDirectives = angular.module('appDirectives', [])
                 }, function () {
                     $log.info('Modal dismissed at: ' + new Date());
                 });
-            }
+            };
+
             $scope.dataElement = $scope.ngProgramStageDataElement.dataElement;
-            if ($scope.dataElement.valueType == "DATE") {
-                if($scope.ngModel.value != ""){
+            var numericalDataElementValueType = ["NUMBER","INTEGER","INTEGER_POSITIVE","INTEGER_NEGATIVE","INTEGER_ZERO_OR_POSITIVE"];
+            if(numericalDataElementValueType.indexOf($scope.dataElement.valueType) != -1 ){
+                if($scope.ngModel && $scope.ngModel.value != ""){
+                    $scope.ngModel.value = parseInt($scope.ngModel.value);
+                }
+            }
+            else if ($scope.dataElement.valueType == "DATE") {
+                if($scope.ngModel && $scope.ngModel.value != ""){
                     $scope.ngModel.value = new Date(parseInt($scope.ngModel.value.substr(0,4)),parseInt($scope.ngModel.value.substr(5,2)) - 1,parseInt($scope.ngModel.value.substr(8)))
                 }
                 $scope.inlineOptions = {
