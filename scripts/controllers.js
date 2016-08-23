@@ -9,7 +9,7 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
         //$scope.offenceEvent = iRoadModal("Offence Event");
         $scope.loading = true;
         $scope.tableParams = new NgTableParams();
-        $scope.params ={pageSize:5};
+        $scope.params ={pageSize:20};
 
         $scope.programName = "Insurance Company";
         function createColumns(programStageDataElements) {
