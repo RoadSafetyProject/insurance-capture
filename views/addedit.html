@@ -11,6 +11,12 @@
                                    ng-model="event.dataValues[getDataElementIndex(programStageDataElement.dataElement)]"></element-input>
                 </td>
             </tr>
+            <tr ng-if="program.programStages[0].captureCoordinates">
+                <td>Coordinates</td>
+                <td>
+                    <location-selector ng-location-model="event.coordinate"></location-selector>
+                </td>
+            </tr>
         </table>
     <div ng-if="loading" class="loader"></div>
 </div>
