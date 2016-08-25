@@ -4,17 +4,20 @@
 <form ng-submit="save()">
 <div class="modal-body">
         <table ng-if="!loading" class="table">
-            <tr ng-repeat="programStageDataElement in program.programStages[0].programStageDataElements | orderBy:'sortOrder'">
+            <tr ng-if="!programStageDataElement.allowProvidedElsewhere" ng-repeat="programStageDataElement in program.programStages[0].programStageDataElements | orderBy:'sortOrder'">
                 <td>{{programStageDataElement.dataElement.name | extrapolateDataElement}}</td>
                 <td>
+                    <div ng-if="(programStageDataElement.dataElement.valueType == 'FILE_RESOURCE')"
+                         class="form-group">
+                        <file-select ng-model="ngModel.value" event="event" dhis-data-element="programStageDataElement.dataElement"></file-select>
+                    </div>
                     <element-input ng-program-stage-data-element="programStageDataElement"
                                    ng-model="event.dataValues[getDataElementIndex(programStageDataElement.dataElement)]"></element-input>
                 </td>
             </tr>
             <tr ng-if="program.programStages[0].captureCoordinates">
-                <td>Coordinates</td>
-                <td>
-                    <location-selector ng-location-model="event.coordinate"></location-selector>
+                <td>Coordinates</td><td>
+                <location-selector ng-location-model="event.coordinate"></location-selector>
                 </td>
             </tr>
         </table>
