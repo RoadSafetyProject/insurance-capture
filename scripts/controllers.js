@@ -6,12 +6,12 @@
 var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
 
     .controller('MainController', function (NgTableParams,iRoadModal, $scope,$uibModal,$log) {
-        //$scope.offenceEvent = iRoadModal("Offence Event");
+
         $scope.loading = true;
         $scope.tableParams = new NgTableParams();
         $scope.params ={pageSize:20};
-
         $scope.programName = "Insurance Company";
+
         function createColumns(programStageDataElements) {
             var cols = [];
             if (programStageDataElements){
@@ -37,6 +37,10 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
             return cols;
         }
 
+        /**
+         * getInsuranceCompanies
+         */
+        getInsuranceCompanies();
         function getInsuranceCompanies(){
             iRoadModal.getAll($scope.programName,$scope.params).then(function(results){
                 $scope.tableParams.settings({
@@ -50,8 +54,12 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
                 })
             })
         }
-        getInsuranceCompanies();
 
+
+        /**
+         * showDetails
+         * @param event
+         */
         $scope.showDetails = function(event){
             var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
@@ -68,23 +76,26 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
                 }
             });
 
-            modalInstance.result.then(function (resultItem) {
+            modalInstance.result.then(function (event) {
                 iRoadModal.setRelations(event).then(function(){
-
                 });
             }, function () {
                 iRoadModal.setRelations(event).then(function(){
-
                 });
                 $log.info('Modal dismissed at: ' + new Date());
             });
-        }
+        };
+
+        /**
+         * showEdit
+         * @param event
+         */
         $scope.showEdit = function(event){
             var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'views/addedit.html',
                 controller: 'EditController',
-                size: "lg",
+                size: "sm",
                 resolve: {
                     event: function () {
                         return event;
@@ -103,22 +114,25 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
                         })
 
                     }
-                })
+                });
                 $scope.tableParams.reload();
             }, function () {
                 iRoadModal.setRelations(event).then(function(){
-
                 });
                 $log.info('Modal dismissed at: ' + new Date());
             });
-        }
+        };
+
+        /**
+         * showAddNew
+         */
         $scope.showAddNew = function(){
             var event = {};
             var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'views/addedit.html',
                 controller: 'EditController',
-                size: "lg",
+                size: "sm",
                 resolve: {
                     event: function () {
                         return event;
@@ -130,28 +144,33 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
             });
 
             modalInstance.result.then(function (resultEvent) {
-                $scope.tableParams.data.push(resultEvent);
+                if(resultEvent && resultEvent.event){
+                    $scope.tableParams.data.push(resultEvent);
+                }
             }, function () {
-
             });
         }
     })
     .controller('DetailController', function (iRoadModal, $scope,$uibModalInstance,program,event) {
         $scope.loading = true;
+        $scope.program = program;
+
         iRoadModal.getRelations(event).then(function(newEvent){
             $scope.event = newEvent;
             $scope.loading = false;
-        })
-        $scope.program = program;
+        });
+
         $scope.ok = function () {
-            $uibModalInstance.close({});
+            $uibModalInstance.close(event);
         };
 
         $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
+            $uibModalInstance.close(event);
         };
     })
     .controller('EditController', function (NgTableParams,iRoadModal, $scope,$uibModalInstance,program,event,toaster,DHIS2EventFactory) {
+        $scope.program = program;
+
         iRoadModal.initiateEvent(event,program).then(function(newEvent){
             $scope.event = newEvent;
             $scope.loading = false;
@@ -161,11 +180,11 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
                     if(dataValue.dataElement == dataElement.id){
                         index = i;
                     }
-                })
+                });
                 return index;
             }
-        })
-        $scope.program = program;
+        });
+
 
         $scope.save = function () {
             $scope.loading = true;
@@ -178,8 +197,8 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
         };
 
         $scope.cancel = function () {
-            iRoadModal.setRelations($scope.event).then(function(){
-                $uibModalInstance.dismiss('cancel');
+            iRoadModal.setRelations($scope.event).then(function(event){
+                $uibModalInstance.close(event);
             })
         };
-    })
+    });
