@@ -81,7 +81,7 @@ var appDirectives = angular.module('appDirectives', [])
                         animation: true,
                         templateUrl: 'views/directives/location-selector.html',
                         controller: 'LocationSelectorController',
-                        size: "lg",
+                        size: "sm",
                         resolve: {
                             coordinate: function () {
                                 return $scope.ngLocationModel;
@@ -313,7 +313,7 @@ var appDirectives = angular.module('appDirectives', [])
                         animation: true,
                         templateUrl: 'views/directives/camera.html',
                         controller: 'CameraController',
-                        size: "lg"
+                        size: "sm"
                     });
                     modalInstance.result.then(function (photo) {
                         $scope.imageSrc = photo;
@@ -333,5 +333,25 @@ var appDirectives = angular.module('appDirectives', [])
                     $scope.getFile();
                 });
             }
+        }
+    })
+    .directive("fileView",function() {
+        return {
+            scope: {
+                event: '=',
+                stageDataElement: '='
+            },
+            controller:function($scope,iRoadModal,$http){
+                $scope.fileUrl = iRoadModal.getFileUrl($scope.event,$scope.stageDataElement);
+
+                $scope.event.dataValues.forEach(function(dataValue){
+                    if(dataValue.dataElement == $scope.stageDataElement.id){
+                        $http.get("/" + dhis2.settings.baseUrl + "/api/fileResources/"+dataValue.value+".json").then(function(results){
+                            $scope.data = results.data;
+                        })
+                    }
+                })
+            },
+            templateUrl:"views/directives/fileView.html"
         }
     })
