@@ -40,7 +40,9 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
         /**
          * getInsuranceCompanies
          */
-        getInsuranceCompanies();
+        dhis2.loadData = function(){
+            getInsuranceCompanies();
+        };
         function getInsuranceCompanies(){
             iRoadModal.getAll($scope.programName,$scope.params).then(function(results){
                 $scope.tableParams.settings({
