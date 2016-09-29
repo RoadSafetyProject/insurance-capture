@@ -40,7 +40,8 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
         /**
          * getInsuranceCompanies
          */
-        dhis2.loadData = function(){
+
+        $scope.getInsuranceCompanies = function(){
             $scope.tableParams = new NgTableParams({count:$scope.pager.pageSize}, {
                 getData: function(params) {
                     $scope.pager.page = params.page();
@@ -61,7 +62,11 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
                     })
                 }
             });
+        }
+        dhis2.loadData = function(){
+            $scope.getInsuranceCompanies();
         };
+        $scope.getInsuranceCompanies();
         function getInsuranceCompanies(){
             iRoadModal.getAll($scope.programName,$scope.params).then(function(results){
                 $scope.tableParams.settings({
