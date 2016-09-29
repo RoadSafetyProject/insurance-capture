@@ -5,11 +5,11 @@
 /* Controllers */
 var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
 
-    .controller('MainController', function (NgTableParams,iRoadModal, $scope,$uibModal,$log) {
+    .controller('MainController', function (NgTableParams,iRoadModal, $scope,$uibModal,$log,$timeout) {
 
         $scope.loading = true;
-        $scope.tableParams = new NgTableParams();
-        $scope.params ={pageSize:20};
+        $scope.pager ={pageSize:10};
+
         $scope.programName = "Insurance Company";
 
         function createColumns(programStageDataElements) {
@@ -41,7 +41,26 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
          * getInsuranceCompanies
          */
         dhis2.loadData = function(){
-            getInsuranceCompanies();
+            $scope.tableParams = new NgTableParams({count:$scope.pager.pageSize}, {
+                getData: function(params) {
+                    $scope.pager.page = params.page();
+                    // ajax request to api
+                    return iRoadModal.getProgramByName($scope.programName).then(function(program){
+                        $scope.program = program;
+                        $scope.tableCols = createColumns(program.programStages[0].programStageDataElements);
+                        return iRoadModal.getAll($scope.programName,$scope.pager).then(function(results){
+                            $scope.pager = results.pager;
+                            params.page($scope.pager.page)
+                            params.total($scope.pager.total);
+                            $timeout(function(){
+                                $scope.loading = false;
+                            });
+                            return results.events;
+                        })
+
+                    })
+                }
+            });
         };
         function getInsuranceCompanies(){
             iRoadModal.getAll($scope.programName,$scope.params).then(function(results){
